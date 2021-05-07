@@ -9,6 +9,7 @@ import requests, uuid, hashlib
 import json
 from datetime import datetime
 import GetCertSN, RSAUtil
+from urllib.parse import urlencode
 
 
 # '''md5 hash'''
@@ -54,6 +55,7 @@ def zfbRequest():
         "out_biz_no": md5Hash("{}".format(uuid.uuid4()).encode("UTF-8")),
         "trans_amount": 0.01,  # 这里是金额
         "product_code": "TRANS_ACCOUNT_NO_PWD",
+        "biz_scene": "DIRECT_TRANSFER",
         "payee_info": {
             "identity": "13800138000",
             "identity_type": "ALIPAY_LOGON_ID",
@@ -75,10 +77,8 @@ def zfbRequest():
 
     sign = getSign(querys)
     querys['sign'] = sign.decode('utf-8')
-    del querys["alipay_root_cert_sn"]
-    del querys["app_cert_sn"]
 
-    url = "{}?{}".format(url, connectQuerys(querys))
+    url = "{}?{}".format(url, urlencode(querys))
 
     req = requests.post(url=url, json=querys)
     content = req.content
