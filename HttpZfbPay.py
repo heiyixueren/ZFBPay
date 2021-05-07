@@ -80,7 +80,7 @@ def zfbRequest():
 
     url = "{}?{}".format(url, urlencode(querys))
 
-    req = requests.post(url=url, json=querys)
+    req = requests.post(url=url)
     content = req.content
     req.close()
 
